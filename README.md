@@ -1,2 +1,2 @@
-# tca-workshop
-The repository for TCA-related experiments
+# TCA workshop
+The repository for TCA-related experiments contains a list of project each one with some separate experiment represented by a set of source files: workspace, configuration files for a project generation, set of source files and related resources. Generic project/target configurations files (`.xcconfig`) are placed at the root folder. Instructions about how to generate and build each experiment product can be found in the **README.md** file inside the corresponding experiment root folder.
