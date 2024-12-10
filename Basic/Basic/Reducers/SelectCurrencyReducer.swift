@@ -15,7 +15,7 @@ struct SelectCurrencyReducer {
     @ObservableState
     struct State: Equatable {
         var currencies: [CurrencyDescriptor] = []
-        var selectedIndex: Int = -1
+        var selectedCurrency: Currency?
     }
 
     enum Action {
@@ -25,11 +25,11 @@ struct SelectCurrencyReducer {
         }
         case delegate(Delegate)
         // User actions
-        case requestCancelSelection
-        case requestConformSelection
+        case didRequestCancelSelection
+        case didRequestConformSelection
         // Handle changes
         case fetchData
-        case setSelectedIndex(Int)
+        case setSelectedCurrency(Currency?)
     }
 
     var body: some ReducerOf<Self> {
@@ -42,13 +42,15 @@ struct SelectCurrencyReducer {
                 state.currencies = Set(currencies).sorted(by: <).compactMap {
                     try? currencyDataProvider.getCurrencyDescriptor($0)
                 }
-            case .requestCancelSelection:
+            case .didRequestCancelSelection:
                 return .send(.delegate(.didCancelSelection))
-            case .requestConformSelection:
-                guard 0 <= state.selectedIndex else { break }
-                return .send(.delegate(.didSelectCurrency(state.currencies[state.selectedIndex].currency)))
-            case let .setSelectedIndex(idx):
-                state.selectedIndex = idx
+            case .didRequestConformSelection:
+                guard let currency = state.selectedCurrency else {
+                    return .send(.delegate(.didCancelSelection))
+                }
+                return .send(.delegate(.didSelectCurrency(currency)))
+            case let .setSelectedCurrency(currency):
+                state.selectedCurrency = currency
             }
 
             return .none

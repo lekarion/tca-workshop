@@ -25,16 +25,17 @@ struct SelectCurrencyView: View {
                     Spacer()
                     HStack(alignment: .firstTextBaseline, spacing: UIConstants.Spacing.standard) {
                         Button {
-                            store.send(.requestCancelSelection)
+                            store.send(.didRequestCancelSelection)
                         } label: {
                             Text("Cancel")
                         }
 
                         Button {
-                            store.send(.requestConformSelection)
+                            store.send(.didRequestConformSelection)
                         } label: {
                             Text("Select")
                         }
+                        .disabled(nil == store.state.selectedCurrency)
                     }
                 }
             }
@@ -46,8 +47,8 @@ private extension SelectCurrencyView {
     func makeCurrenciesContentView() -> some View {
         List(
             selection: .init(
-                get: { store.selectedIndex},
-                set: { store.send(.setSelectedIndex($0)) }
+                get: { store.state.selectedCurrency },
+                set: { store.send(.setSelectedCurrency($0)) }
             )
         ) {
             ForEach(store.currencies, id: \.currency) { descriptor in
