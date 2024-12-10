@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 #Preview {
     ContentView()
+        .frame(minWidth: 350.0, minHeight: 200.0)
 }
