@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 #Preview {
-    ContentView()
-        .frame(minWidth: 350.0, minHeight: 200.0)
+    ContentView(store: Store(initialState: ContentReducer.State()) {
+        ContentReducer()
+    }).frame(minWidth: 350.0, minHeight: 200.0)
 }
