@@ -10,12 +10,15 @@ import ComposableArchitecture
 
 struct ContentView: View {
     @Perception.Bindable var store: StoreOf<ContentReducer>
+    
+    @AppStorage(AppSettings.Key.fromCurrencyKey) private var fromCurrency: String?
+    @AppStorage(AppSettings.Key.currencyRecordsKey) private var currencyRecords: Data?
 
     var body: some View {
         WithPerceptionTracking {
             ScrollView {
                 VStack(alignment: .leading, spacing: UIConstants.Spacing.medium) {
-                    makeCurrencyRow(title: "USA", flag: "🇺🇸", value: "1") {
+                    makeCurrencyRow(currency: store.state.fromCurrency, value: "1") {
                         Button {
                             store.send(.didRequestUpdateFromCurrency)
                         } label: {
@@ -43,18 +46,37 @@ struct ContentView: View {
                 minWidth: UIConstants.Geometry.minContentSize.width,
                 minHeight: UIConstants.Geometry.minContentSize.height
             )
+            .onAppear {
+                var records: [CurrencyRecord]?
+                if let encodedData = currencyRecords {
+                    let decoder = JSONDecoder()
+                    records = try? decoder.decode([CurrencyRecord].self, from: encodedData)
+                }
+
+                store.send(.initialFetchData(fromCurrency, records))
+            }
         }
     }
 }
 
 private extension ContentView {
-    func makeCurrencyRow(title: String, flag: String, value: String, actions: () -> some View) -> some View {
-        HStack(alignment: .firstTextBaseline) {
-            HStack(alignment: .firstTextBaseline, spacing: UIConstants.Spacing.standard) {
-                Text("🇺🇸")
-                Text("USA")
+    func makeCurrencyRow(currency: Currency, value: String, actions: () -> some View) -> some View {
+        @Dependency(CurrencyDataProvider.self) var currencyDataProvider
+
+        let descriptor = try? currencyDataProvider.getCurrencyDescriptor(currency)
+
+        return HStack(alignment: .firstTextBaseline) {
+            if let descriptor {
+                HStack(alignment: .firstTextBaseline, spacing: UIConstants.Spacing.standard) {
+                    Text(descriptor.flagSymbol)
+                    Text("\(descriptor.title) (\(descriptor.currency))")
+                }
+                .font(.headline)
+            } else {
+                Text("Unknown")
+                    .foregroundStyle(.red)
+                    .font(.headline)
             }
-            .font(.headline)
 
             Spacer(minLength: UIConstants.Spacing.standard)
             Text("\(value)")
@@ -103,7 +125,7 @@ private extension ContentView {
                     } else {
                         VStack(alignment: .leading, spacing: UIConstants.Spacing.standard) {
                             ForEach(Array(store.state.currencies.enumerated()), id: \.self.1) {
-                                makeCurrencyRow(title: "\($0.1)", flag: "🇺🇸", value: "\($0.0 * 20)") {
+                                makeCurrencyRow(currency: $0.1, value: "\($0.0 * 20)") {
                                     makeEditButtonsView(index: 0)
                                 }
                             }

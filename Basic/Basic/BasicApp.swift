@@ -16,5 +16,6 @@ struct BasicApp: App {
                 ContentReducer()
             })
         }
+        .windowResizability(.contentSize)
     }
 }

@@ -1,0 +1,63 @@
+{
+    "baseCode": "980",
+    "baseSign": "UAH",
+    "baseIdentifier" : "UAH.hryvnia",
+    "supportedCurrencies" : {
+        "980": {
+            "identifier": "UAH.hryvnia",
+            "sign": "UAH"
+        },
+        "036": {
+            "identifier": "AUD.australian.dollar",
+            "sign": "AUD"
+        },
+        "840": {
+            "identifier": "USD.us.dollar",
+            "sign": "USD"
+        },
+        "978": {
+            "identifier": "EUR.euro",
+            "sign": "EUR"
+        },
+        "392": {
+            "identifier": "JPY.yen",
+            "sign": "JPY"
+        },
+        "985": {
+            "identifier": "PLN.zloty",
+            "sign": "PLN"
+        },
+        "124": {
+            "identifier": "CAD.canadian.dollar",
+            "sign": "CAD"
+        },
+        "826": {
+            "identifier": "GBP.pound.sterling",
+            "sign": "GBP"
+        },
+        "752": {
+            "identifier": "SEK.swedish.krona",
+            "sign": "SEK"
+        },
+        "756": {
+            "identifier": "CHF.swiss.franc",
+            "sign": "CHF"
+        },
+        "949": {
+            "identifier": "TRY.turkish.lira",
+            "sign": "TRY"
+        },
+        "360": {
+            "identifier": "IDR.rupiah",
+            "sign": "IDR"
+        },
+        "398": {
+            "identifier": "KZT.tenge",
+            "sign": "KZT"
+        },
+        "578": {
+            "identifier": "NOK.norwegian.krone",
+            "sign": "NOK"
+        }
+    }
+}

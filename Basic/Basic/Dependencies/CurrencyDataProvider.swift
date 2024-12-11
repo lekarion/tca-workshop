@@ -18,8 +18,16 @@ struct CurrencyDescriptor: Equatable {
 }
 
 @DependencyClient
-public struct CurrencyDataProvider {
-    var supportedCurrencies: () throws -> [Currency]
+struct CurrencyDataProvider {
+    var currenciesBase: () throws -> CurrenciesBase
+    var supportedCurrencies: () throws -> Set<Currency>
     var getCurrencyDescriptor: (Currency) throws -> CurrencyDescriptor
     var fetchCurrencyCourse: (Currency, Currency) async throws -> Double
+}
+
+extension CurrencyDataProvider {
+    enum ProviderError: LocalizedError, Codable {
+        case loadingFailed(String)
+        case notSupported(Currency)
+    }
 }

@@ -8,7 +8,7 @@
 import Dependencies
 
 extension CurrencyDataProvider: TestDependencyKey {
-    static public var testValue: CurrencyDataProvider {
+    static var testValue: CurrencyDataProvider {
         .liveValue
     }
 }

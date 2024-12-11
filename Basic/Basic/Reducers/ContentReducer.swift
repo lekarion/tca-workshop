@@ -15,10 +15,12 @@ struct ContentReducer {
 
     @ObservableState
     struct State: Equatable {
-        var fromCurrency: String = "us"
-        var fromValue: Double = 1.0
+        var fromCurrency: Currency = ""
+        var currencyRecords: [CurrencyRecord] = []
+
+        var fromValue: Double = 0.0
         var currencies: OrderedSet<String> = []
-        var cources: [String: CourceInfo] = [:]
+        var courses: [String: CourseInfo] = [:]
         var isCurrencySelectionPresented = false
 
         var selectCurrencyReducer: SelectCurrencyReducer.State = .init()
@@ -26,7 +28,7 @@ struct ContentReducer {
 
     enum Action: BindableAction {
         case binding(BindingAction<State>)
-        case initialFetchData
+        case initialFetchData(Currency?, [CurrencyRecord]?)
         // User actions
         case didRequestUpdateFromCurrency
         case didRequestUpdateCourse(Int)
@@ -51,15 +53,17 @@ struct ContentReducer {
             case let .selectCurrencyReducer(.delegate(.didSelectCurrency(currency))):
                 state.fromCurrency = currency
                 state.isCurrencySelectionPresented = false
-            case .initialFetchData:
-                break
+            case let .initialFetchData(curency, records):
+                guard let currenciesBase = try? currencyDataProvider.currenciesBase() else { break }
+                state.fromCurrency = curency ?? currenciesBase.baseCode
+                state.currencyRecords = records ?? []
             case .didRequestUpdateFromCurrency:
                 state.isCurrencySelectionPresented = true
             case let .didRequestUpdateCourse(idx):
-                // TODO: use courency update API
+                // TODO: use currency update API
                 break
             case .didRequestUpdateAllCourses:
-                // TODO: use courency update API
+                // TODO: use currency update API
                 break
             case let .didRequestAddCurrency(idx):
                 // TODO: implement if need
@@ -90,7 +94,7 @@ struct ContentReducer {
 }
 
 extension ContentReducer {
-    struct CourceInfo: Equatable, Codable {
+    struct CourseInfo: Equatable, Codable {
         var value: Double
         var updateDate: Date
     }
