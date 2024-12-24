@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 struct ContentView: View {
     @Perception.Bindable var store: StoreOf<ContentReducer>
-    
+
     var body: some View {
         WithPerceptionTracking {
             VStack(alignment: .leading) {
@@ -24,13 +24,7 @@ struct ContentView: View {
                         .disabled(true) // TODO: enable when corresponding functionality is implemented
                     }
                     .sheet(isPresented: $store.state.isCurrencySelectionPresented) {
-                        WithPerceptionTracking {
-                            SelectCurrencyView(store: store.scope(state: \.selectCurrencyReducer, action: \.selectCurrencyReducer))
-                                .frame(
-                                    width: UIConstants.Geometry.selectCurrencyContentSize.width,
-                                    height: UIConstants.Geometry.selectCurrencyContentSize.height)
-                                .padding()
-                        }
+                        makeCurrencySelectionView()
                     }
 
                     VStack(alignment: .leading, spacing: UIConstants.Spacing.standard) {
@@ -39,6 +33,7 @@ struct ContentView: View {
                         ScrollView {
                             VStack(alignment: .leading, spacing: UIConstants.Spacing.standard) {
                                 makeContentView()
+                                    .padding(UIConstants.Padding.content)
                             }
                         }
                     }
@@ -76,7 +71,7 @@ private extension ContentView {
         }
     }
 
-    func makeEditButtonsView(index: Int, showReload: Bool = true) -> some View {
+    func makeEditButtonsView(index: Int, showReload: Bool = true, enableMinus: Bool = true) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: UIConstants.Spacing.standard) {
             if showReload {
                 Button {
@@ -88,17 +83,21 @@ private extension ContentView {
             }
 
             Button {
-                // TODO: implement
+                store.send(.didRequestRemoveCurrency(index))
             } label: {
                 Image(systemName: "minus")
                     .font(.headline)
             }
+            .disabled(!enableMinus)
 
             Button {
-                // TODO: implement
+                store.send(.didRequestAddCurrency(index))
             } label: {
                 Image(systemName: "plus")
                     .font(.headline)
+            }
+            .sheet(isPresented: $store.state.isCurrencyAddingPresented) {
+                makeCurrencySelectionView()
             }
         }
     }
@@ -110,19 +109,29 @@ private extension ContentView {
                     if store.state.currencies.isEmpty {
                         HStack {
                             Spacer()
-                            makeEditButtonsView(index: 0, showReload: false)
+                            makeEditButtonsView(index: 0, showReload: false, enableMinus: false)
                         }
                     } else {
                         VStack(alignment: .leading, spacing: UIConstants.Spacing.standard) {
-                            ForEach(Array(store.state.currencies.enumerated()), id: \.self.1) {
-                                makeCurrencyRow(currency: $0.1, value: "\($0.0 * 20)") {
-                                    makeEditButtonsView(index: 0)
+                            ForEach(Array(store.state.currencies.enumerated()), id: \.self.1) { currenceInfo in
+                                makeCurrencyRow(currency: currenceInfo.1, value: "\(currenceInfo.0 * 20)") {
+                                    makeEditButtonsView(index: currenceInfo.0)
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    func makeCurrencySelectionView() -> some View {
+        WithPerceptionTracking {
+            SelectCurrencyView(store: store.scope(state: \.selectCurrencyReducer, action: \.selectCurrencyReducer))
+                .frame(
+                    width: UIConstants.Geometry.selectCurrencyContentSize.width,
+                    height: UIConstants.Geometry.selectCurrencyContentSize.height)
+                .padding()
         }
     }
 }
