@@ -10,11 +10,16 @@ import ComposableArchitecture
 
 @main
 struct BasicApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     var body: some Scene {
         WindowGroup {
-            ContentView(store: Store(initialState: ContentReducer.State()) {
-                ContentReducer()
-            })
+            ContentView(store: appDelegate.store)
+                .frame(
+                    minWidth: UIConstants.Geometry.minContentSize.width,
+                    minHeight: UIConstants.Geometry.minContentSize.height
+                )
+                .padding()
         }
         .windowResizability(.contentSize)
     }

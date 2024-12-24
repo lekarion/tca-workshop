@@ -11,12 +11,9 @@ import ComposableArchitecture
 struct ContentView: View {
     @Perception.Bindable var store: StoreOf<ContentReducer>
     
-    @AppStorage(AppSettings.Key.fromCurrencyKey) private var fromCurrency: String?
-    @AppStorage(AppSettings.Key.currencyRecordsKey) private var currencyRecords: Data?
-
     var body: some View {
         WithPerceptionTracking {
-            ScrollView {
+            VStack(alignment: .leading) {
                 VStack(alignment: .leading, spacing: UIConstants.Spacing.medium) {
                     makeCurrencyRow(currency: store.state.fromCurrency, value: "1") {
                         Button {
@@ -24,6 +21,7 @@ struct ContentView: View {
                         } label: {
                             Text("Select...")
                         }
+                        .disabled(true) // TODO: enable when corresponding functionality is implemented
                     }
                     .sheet(isPresented: $store.state.isCurrencySelectionPresented) {
                         WithPerceptionTracking {
@@ -35,25 +33,17 @@ struct ContentView: View {
                         }
                     }
 
-                    Divider()
+                    VStack(alignment: .leading, spacing: UIConstants.Spacing.standard) {
+                        Divider()
 
-                    makeContentView()
-                    Spacer()
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: UIConstants.Spacing.standard) {
+                                makeContentView()
+                            }
+                        }
+                    }
                 }
-                .padding()
-            }
-            .frame(
-                minWidth: UIConstants.Geometry.minContentSize.width,
-                minHeight: UIConstants.Geometry.minContentSize.height
-            )
-            .onAppear {
-                var records: [CurrencyRecord]?
-                if let encodedData = currencyRecords {
-                    let decoder = JSONDecoder()
-                    records = try? decoder.decode([CurrencyRecord].self, from: encodedData)
-                }
-
-                store.send(.initialFetchData(fromCurrency, records))
+                Spacer()
             }
         }
     }

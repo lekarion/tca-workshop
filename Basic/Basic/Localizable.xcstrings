@@ -1,0 +1,185 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@" : {
+
+    },
+    "%@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "AUD.australian.dollar.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇦🇺"
+          }
+        }
+      }
+    },
+    "CAD.canadian.dollar.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇨🇦"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+
+    },
+    "CHF.swiss.franc.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇨🇭"
+          }
+        }
+      }
+    },
+    "EUR.euro.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇪🇺"
+          }
+        }
+      }
+    },
+    "GBP.pound.sterling.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇬🇧"
+          }
+        }
+      }
+    },
+    "IDR.rupiah.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇮🇳"
+          }
+        }
+      }
+    },
+    "JPY.yen.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇯🇵"
+          }
+        }
+      }
+    },
+    "KZT.tenge.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇰🇿"
+          }
+        }
+      }
+    },
+    "NOK.norwegian.krone.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇳🇴"
+          }
+        }
+      }
+    },
+    "PLN.zloty.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇵🇱"
+          }
+        }
+      }
+    },
+    "SEK.swedish.krona.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇸🇪"
+          }
+        }
+      }
+    },
+    "Select" : {
+
+    },
+    "Select..." : {
+
+    },
+    "TRY.turkish.lira.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇹🇷"
+          }
+        }
+      }
+    },
+    "UAH.hryvnia.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇺🇦"
+          }
+        }
+      }
+    },
+    "Unknown" : {
+
+    },
+    "USD.us.dollar.flag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇺🇸"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

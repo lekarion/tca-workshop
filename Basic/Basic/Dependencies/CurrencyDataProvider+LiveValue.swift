@@ -21,7 +21,7 @@ extension CurrencyDataProvider: DependencyKey {
             return CurrencyDescriptor(
                 currency: $0,
                 title: record.sign,
-                flagSymbol: "🇺🇸",
+                flagSymbol: record.identifier.localizedFlag,
                 description: record.identifier
             )
         } fetchCurrencyCourse: { _, _ in
