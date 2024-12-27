@@ -8,21 +8,16 @@
 import Foundation
 import DependenciesMacros
 
-typealias Currency = String
-
-struct CurrencyDescriptor: Equatable {
-    var currency: Currency
-    var title: String
-    var flagSymbol: String
-    var description: String
-}
-
 @DependencyClient
 struct CurrencyDataProvider {
-    var currenciesBase: () throws -> CurrenciesBase
-    var supportedCurrencies: () throws -> Set<Currency>
-    var getCurrencyDescriptor: (Currency) throws -> CurrencyDescriptor
-    var fetchCurrencyCourse: (Currency, Currency) async throws -> Double
+    /// Get basic app currencies data base
+    var currenciesBase: () async throws -> CurrenciesBase
+    /// Get set of supported currencies
+    var supportedCurrencies: () async throws -> Set<Currency>
+    /// Get currency detailed description
+    var getCurrencyDescriptor: (Currency) async throws -> CurrencyDescriptor
+    /// Fetch current exchange course for a specified currency 
+    var fetchCurrencyCourse: (Currency) async throws -> Double
 }
 
 extension CurrencyDataProvider {

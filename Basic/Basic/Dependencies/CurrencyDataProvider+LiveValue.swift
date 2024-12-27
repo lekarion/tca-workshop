@@ -24,7 +24,8 @@ extension CurrencyDataProvider: DependencyKey {
                 flagSymbol: record.identifier.localizedFlag,
                 description: record.identifier
             )
-        } fetchCurrencyCourse: { _, _ in
+        } fetchCurrencyCourse: { _ in
+            // TODO: implement using API
             1.0
         }
     }
