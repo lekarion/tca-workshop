@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+ 
 struct CurrencyRecord: Codable, Equatable {
     var identifier: String
     var sign: String
@@ -14,8 +14,6 @@ struct CurrencyRecord: Codable, Equatable {
 }
 
 struct CurrencyExchange: Codable, Equatable {
-    var baseSign: String
     var updateDate: Date
-    var units: Int
-    var amount: Double
+    var exchange: ExchangeRecord
 }
