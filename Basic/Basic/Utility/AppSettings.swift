@@ -10,6 +10,7 @@ import SwiftUI
 enum AppSettings {
     enum Key {
         static let fromCurrencyKey = "fromCurrency"
+        static let selectedCurrenciesKey = "selectedCurrencies"
         static let currencyRecordsKey = "currencyRecords"
     }
 }

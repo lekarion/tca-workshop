@@ -1,4 +1,5 @@
 {
+    "api": "nbu",
     "baseCode": "980",
     "baseSign": "UAH",
     "baseIdentifier" : "UAH.hryvnia",

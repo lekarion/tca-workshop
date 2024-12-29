@@ -29,6 +29,7 @@ struct SelectCurrencyReducer {
         case didRequestConformSelection
         // Handle changes
         case fetchData
+        case setCurrencies([CurrencyDescriptor])
         case setSelectedCurrency(Currency?)
     }
 
@@ -38,9 +39,19 @@ struct SelectCurrencyReducer {
             case .delegate:
                 break
             case .fetchData:
-                guard let currencies = try? currencyDataProvider.supportedCurrencies() else { break }
-                state.currencies = Set(currencies).sorted(by: <).compactMap {
-                    try? currencyDataProvider.getCurrencyDescriptor($0)
+                return .run { send in
+                    let supported = try await currencyDataProvider.supportedCurrencies()
+
+                    var result = [CurrencyDescriptor]()
+                    result.reserveCapacity(supported.count)
+
+                    let currencies = Set(supported).sorted(by: <)
+                    for currency in currencies {
+                        guard let info = try? await currencyDataProvider.getCurrencyDescriptor(currency) else { continue }
+                        result.append(info)
+                    }
+
+                    await send(.setCurrencies(result))
                 }
             case .didRequestCancelSelection:
                 return .send(.delegate(.didCancelSelection))
@@ -49,6 +60,8 @@ struct SelectCurrencyReducer {
                     return .send(.delegate(.didCancelSelection))
                 }
                 return .send(.delegate(.didSelectCurrency(currency)))
+            case let .setCurrencies(descriptors):
+                state.currencies = descriptors
             case let .setSelectedCurrency(currency):
                 state.selectedCurrency = currency
             }

@@ -12,15 +12,15 @@ import ComposableArchitecture
 @Reducer
 struct ContentReducer {
     @Dependency(CurrencyDataProvider.self) private var currencyDataProvider
+    @Dependency(ContentDataProvider.self) private var contentDataProvider
 
     @ObservableState
     struct State: Equatable {
         var fromCurrency: Currency = ""
-        var currencyRecords: [CurrencyRecord] = []
-
         var fromValue: Double = 0.0
         var currencies: OrderedSet<Currency> = []
-        var courses: [String: CourseInfo] = [:]
+        var currencyRecords: [Currency: CurrencyRecord] = [:]
+        var currencyDescriptors: [Currency: CurrencyDescriptor] = [:]
 
         var isCurrencySelectionPresented = false
         var isCurrencyAddingPresented = false
@@ -31,7 +31,7 @@ struct ContentReducer {
 
     enum Action: BindableAction {
         case binding(BindingAction<State>)
-        case initialFetchData(Currency?, [CurrencyRecord]?)
+        case initialize
         // User actions
         case didRequestUpdateFromCurrency
         case didRequestUpdateCourse(Int)
@@ -39,6 +39,8 @@ struct ContentReducer {
         case didRequestAddCurrency(Int)
         case didRequestRemoveCurrency(Int)
         // Handle changes
+        case setCurrencyDescriptors([Currency: CurrencyDescriptor])
+        case setInitialData(Currency, [Currency], [Currency: CurrencyRecord])
         case setFromCurrency(String)
         case setFromValue(Double)
         case resetEditing
@@ -61,10 +63,33 @@ struct ContentReducer {
                     state.currencies.insert(currency, at: state.currencyAddingIndex)
                 }
                 return .send(.resetEditing)
-            case let .initialFetchData(curency, records):
-                guard let currenciesBase = try? currencyDataProvider.currenciesBase() else { break }
-                state.fromCurrency = curency ?? currenciesBase.baseCode
-                state.currencyRecords = records ?? []
+            case .initialize:
+                return .run { send in
+                    let currenciesBase = try await currencyDataProvider.currenciesBase()
+                    var supportedCurrencies = try await currencyDataProvider.supportedCurrencies()
+
+                    let fromCurrency = (try? await contentDataProvider.fetchFromCurrency()) ?? currenciesBase.baseCode
+                    let currencies = ((try? await contentDataProvider.fetchCurrencies()) ?? []).compactMap {
+                        supportedCurrencies.contains($0) ? $0 : nil
+                    }
+                    let records = (try? await contentDataProvider.fetchCurrencyRecords()) ?? [:]
+
+                    var descriptors = [Currency: CurrencyDescriptor]()
+                    supportedCurrencies.insert(fromCurrency)
+                    for currency in supportedCurrencies {
+                        guard let info = try? await currencyDataProvider.getCurrencyDescriptor(currency) else { continue }
+                        descriptors[currency] = info
+                    }
+
+                    await send(.setCurrencyDescriptors(descriptors))
+                    await send(.setInitialData(fromCurrency, currencies, records))
+                }
+            case let .setInitialData(fromCurrency, currencies, currencyRecords):
+                state.fromCurrency = fromCurrency
+                state.currencies = OrderedSet(currencies)
+                state.currencyRecords = currencyRecords
+            case let .setCurrencyDescriptors(value):
+                state.currencyDescriptors = value
             case .didRequestUpdateFromCurrency:
                 state.isCurrencySelectionPresented = true
             case let .didRequestUpdateCourse(idx):
@@ -97,12 +122,5 @@ struct ContentReducer {
             SelectCurrencyReducer()
         }
 
-    }
-}
-
-extension ContentReducer {
-    struct CourseInfo: Equatable, Codable {
-        var value: Double
-        var updateDate: Date
     }
 }

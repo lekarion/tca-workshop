@@ -46,12 +46,8 @@ struct ContentView: View {
 
 private extension ContentView {
     func makeCurrencyRow(currency: Currency, value: String, actions: () -> some View) -> some View {
-        @Dependency(CurrencyDataProvider.self) var currencyDataProvider
-
-        let descriptor = try? currencyDataProvider.getCurrencyDescriptor(currency)
-
-        return HStack(alignment: .firstTextBaseline) {
-            if let descriptor {
+        HStack(alignment: .firstTextBaseline) {
+            if let descriptor = store.state.currencyDescriptors[currency] {
                 HStack(alignment: .firstTextBaseline, spacing: UIConstants.Spacing.standard) {
                     Text(descriptor.flagSymbol)
                     Text("\(descriptor.title) (\(descriptor.currency))")
