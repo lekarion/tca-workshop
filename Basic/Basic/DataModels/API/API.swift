@@ -11,8 +11,8 @@ typealias Currency = String
 
 protocol API {
     var baseCurrency: Currency { get }
-    var exchangeInfo: [ExchangeRecord] { get async }
 
+    func exchangeInfo(for currency: Currency) async -> ExchangeRecord?
     func updateExchangeInfo(for currency: Currency?) async
 }
 

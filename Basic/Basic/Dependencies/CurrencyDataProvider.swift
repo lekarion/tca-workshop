@@ -23,6 +23,7 @@ struct CurrencyDataProvider {
 extension CurrencyDataProvider {
     enum ProviderError: LocalizedError, Codable {
         case loadingFailed(String)
+        case invalidAPI
         case notSupported(Currency)
     }
 }

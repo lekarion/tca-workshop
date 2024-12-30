@@ -9,13 +9,16 @@ import Foundation
 
 actor NBU: API {
     let baseCurrency: Currency = "980"
-    var exchangeInfo: [ExchangeRecord] { records }
 
-    func updateExchangeInfo(for currency: Currency? = nil) async {
-        records = []
+    func exchangeInfo(for currency: Currency) async -> ExchangeRecord? {
+        records[currency]
     }
 
-    private var records: [ExchangeRecord] = []
+    func updateExchangeInfo(for currency: Currency? = nil) async {
+        records = [:]
+    }
+
+    private var records: [Currency: ExchangeRecord] = [:]
 }
 
 extension NBU {
