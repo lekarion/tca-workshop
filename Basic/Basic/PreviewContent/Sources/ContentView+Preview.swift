@@ -9,7 +9,16 @@ import SwiftUI
 import ComposableArchitecture
 
 #Preview {
-    ContentView(store: Store(initialState: ContentReducer.State()) {
+    let store = Store(initialState: ContentReducer.State(
+        fromCurrency: "980",
+        fromValue: 1.0
+    )) {
         ContentReducer()
-    }).frame(minWidth: 350.0, minHeight: 200.0)
+    }
+    ContentView(store: store)
+        .padding()
+        .frame(minWidth: 350.0, minHeight: 200.0)
+        .onAppear {
+            store.send(.initialize)
+        }
 }
