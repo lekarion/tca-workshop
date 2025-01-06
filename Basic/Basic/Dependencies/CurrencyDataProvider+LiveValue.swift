@@ -42,7 +42,7 @@ extension CurrencyDataProvider: DependencyKey {
                 let info = await api.exchangeInfo(for: currency)
             else { throw ProviderError.notSupported(currency) }
 
-            return info.amount / Double(info.units)
+            return info
         }
     }
 }

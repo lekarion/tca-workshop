@@ -1,8 +1,11 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "-" : {
+      "shouldTranslate" : false
+    },
     "%@" : {
-
+      "shouldTranslate" : false
     },
     "%@ (%@)" : {
       "localizations" : {
@@ -12,7 +15,17 @@
             "value" : "%1$@ (%2$@)"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
+    },
+    "%lf" : {
+      "shouldTranslate" : false
+    },
+    "%lld" : {
+      "shouldTranslate" : false
+    },
+    "1" : {
+      "shouldTranslate" : false
     },
     "AUD.australian.dollar.flag" : {
       "extractionState" : "manual",

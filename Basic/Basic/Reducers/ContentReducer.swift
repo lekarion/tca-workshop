@@ -44,6 +44,7 @@ struct ContentReducer {
         case setFromCurrency(String)
         case setFromValue(Double)
         case resetEditing
+        case setCurrencyRecord(Currency, CurrenciesBase.Descriptor, ExchangeRecord)
         // Scopes
         case selectCurrencyReducer(SelectCurrencyReducer.Action)
     }
@@ -99,8 +100,15 @@ struct ContentReducer {
             case .didRequestUpdateFromCurrency:
                 state.isFromCurrencyPresented = true
             case let .didRequestUpdateCourse(idx):
-                // TODO: use currency update API
-                break
+                return .run { [currency = state.currencies[idx]] send in
+                    guard
+                        let base = try? await currencyDataProvider.currenciesBase(),
+                        let descriptor = base.supportedCurrencies[currency]
+                    else { return }
+                    guard let record = try? await currencyDataProvider.fetchCurrencyCourse(currency) else { return }
+
+                    await send(.setCurrencyRecord(currency, descriptor, record))
+                }
             case .didRequestUpdateAllCourses:
                 // TODO: use currency update API
                 break
@@ -120,6 +128,15 @@ struct ContentReducer {
                 state.isFromCurrencyPresented = false
                 state.isCurrencyAddingPresented = false
                 state.currencyAddingIndex = -1
+            case let .setCurrencyRecord(currency, descriptor, value):
+                state.currencyRecords[currency] = CurrencyRecord(
+                    identifier: descriptor.identifier,
+                    sign: descriptor.sign,
+                    exchange: CurrencyExchange(
+                        updateDate: Date.now,
+                        exchange: value
+                    )
+                )
             case .binding, .selectCurrencyReducer:
                 break
             }

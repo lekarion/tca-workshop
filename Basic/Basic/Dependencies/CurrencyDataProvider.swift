@@ -17,7 +17,7 @@ struct CurrencyDataProvider {
     /// Get currency detailed description
     var getCurrencyDescriptor: (Currency) async throws -> CurrencyDescriptor
     /// Fetch current exchange course for a specified currency 
-    var fetchCurrencyCourse: (Currency) async throws -> Double
+    var fetchCurrencyCourse: (Currency) async throws -> ExchangeRecord
 }
 
 extension CurrencyDataProvider {

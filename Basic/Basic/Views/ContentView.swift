@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Foundation
 import ComposableArchitecture
 
 struct ContentView: View {
@@ -15,7 +16,9 @@ struct ContentView: View {
         WithPerceptionTracking {
             VStack(alignment: .leading) {
                 VStack(alignment: .leading, spacing: UIConstants.Spacing.medium) {
-                    makeCurrencyRow(currency: store.state.fromCurrency, value: "1") {
+                    makeCurrencyRow(currency: store.state.fromCurrency) {
+                        Text("1")
+                    } actions: {
                         Button {
                             store.send(.didRequestUpdateFromCurrency)
                         } label: {
@@ -45,7 +48,11 @@ struct ContentView: View {
 }
 
 private extension ContentView {
-    func makeCurrencyRow(currency: Currency, value: String, actions: () -> some View) -> some View {
+    func makeCurrencyRow(
+        currency: Currency,
+        value: () -> some View,
+        actions: () -> some View
+    ) -> some View {
         HStack(alignment: .firstTextBaseline) {
             if let descriptor = store.state.currencyDescriptors[currency] {
                 HStack(alignment: .firstTextBaseline, spacing: UIConstants.Spacing.standard) {
@@ -60,7 +67,7 @@ private extension ContentView {
             }
 
             Spacer(minLength: UIConstants.Spacing.standard)
-            Text("\(value)")
+            value()
             Spacer(minLength: UIConstants.Spacing.standard)
 
             actions()
@@ -71,7 +78,7 @@ private extension ContentView {
         HStack(alignment: .firstTextBaseline, spacing: UIConstants.Spacing.standard) {
             if showReload {
                 Button {
-                    // TODO: implement
+                    store.send(.didRequestUpdateCourse(index))
                 } label: {
                     Image(systemName: "arrow.triangle.2.circlepath")
                         .font(.headline)
@@ -109,8 +116,20 @@ private extension ContentView {
                         }
                     } else {
                         VStack(alignment: .leading, spacing: UIConstants.Spacing.standard) {
-                            ForEach(Array(store.state.currencies.enumerated()), id: \.self.1) { currenceInfo in
-                                makeCurrencyRow(currency: currenceInfo.1, value: "\(currenceInfo.0 * 20)") {
+                            ForEach(Array(store.state.currencies.elements.enumerated()), id: \.self.1) { currenceInfo in
+                                makeCurrencyRow(currency: currenceInfo.1) {
+                                    VStack {
+                                        if let value = store.state.currencyRecords[currenceInfo.1]?.exchange {
+                                            HStack(spacing: UIConstants.Spacing.standard) {
+                                                Text("\(value.exchange.units)")
+                                                Text("\(value.exchange.amount)")
+                                                Text("\(Self.updateDateFormatter.string(from: value.updateDate))")
+                                            }
+                                        } else {
+                                            Text("-")
+                                        }
+                                    }
+                                } actions: {
                                     makeEditButtonsView(index: currenceInfo.0)
                                 }
                             }
@@ -130,4 +149,12 @@ private extension ContentView {
                 .padding()
         }
     }
+}
+
+private extension ContentView {
+    static let updateDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        return formatter
+    }()
 }
