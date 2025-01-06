@@ -137,6 +137,9 @@ struct ContentReducer {
                         exchange: value
                     )
                 )
+                return .run { [records = state.currencyRecords] _ in
+                    try? await contentDataProvider.pushCurrencyRecords(records)
+                }
             case .binding, .selectCurrencyReducer:
                 break
             }
