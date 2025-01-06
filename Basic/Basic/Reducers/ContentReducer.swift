@@ -22,7 +22,7 @@ struct ContentReducer {
         var currencyRecords: [Currency: CurrencyRecord] = [:]
         var currencyDescriptors: [Currency: CurrencyDescriptor] = [:]
 
-        var isCurrencySelectionPresented = false
+        var isFromCurrencyPresented = false
         var isCurrencyAddingPresented = false
         var currencyAddingIndex: Int = -1
 
@@ -55,14 +55,20 @@ struct ContentReducer {
             case .selectCurrencyReducer(.delegate(.didCancelSelection)):
                 return .send(.resetEditing)
             case let .selectCurrencyReducer(.delegate(.didSelectCurrency(currency))):
-                if state.isCurrencySelectionPresented {
+                var effect: Effect<Action> = .none
+                if state.isFromCurrencyPresented {
                     state.fromCurrency = currency
-                } else if
-                    state.isCurrencyAddingPresented,
-                    state.currencyAddingIndex >= 0 {
+                    effect = .run { _ in
+                        try? await contentDataProvider.pushFromCurrency(currency)
+                    }
+                } else if state.isCurrencyAddingPresented {
+                    guard state.currencyAddingIndex >= 0 else { break }
                     state.currencies.insert(currency, at: state.currencyAddingIndex)
+                    effect = .run { [currencies = state.currencies.elements] _ in
+                        try? await contentDataProvider.pushCurrencies(currencies)
+                    }
                 }
-                return .send(.resetEditing)
+                return .concatenate( .send(.resetEditing), effect)
             case .initialize:
                 return .run { send in
                     let currenciesBase = try await currencyDataProvider.currenciesBase()
@@ -91,7 +97,7 @@ struct ContentReducer {
             case let .setCurrencyDescriptors(value):
                 state.currencyDescriptors = value
             case .didRequestUpdateFromCurrency:
-                state.isCurrencySelectionPresented = true
+                state.isFromCurrencyPresented = true
             case let .didRequestUpdateCourse(idx):
                 // TODO: use currency update API
                 break
@@ -103,12 +109,15 @@ struct ContentReducer {
                 state.isCurrencyAddingPresented = true
             case let .didRequestRemoveCurrency(idx):
                 state.currencies.remove(at: idx)
+                return .run { [currencies = state.currencies.elements] _ in
+                    try? await contentDataProvider.pushCurrencies(currencies)
+                }
             case let .setFromCurrency(name):
                 state.fromCurrency = name
             case let .setFromValue(value):
                 state.fromValue = value
             case .resetEditing:
-                state.isCurrencySelectionPresented = false
+                state.isFromCurrencyPresented = false
                 state.isCurrencyAddingPresented = false
                 state.currencyAddingIndex = -1
             case .binding, .selectCurrencyReducer:
@@ -121,6 +130,5 @@ struct ContentReducer {
         Scope(state: \.selectCurrencyReducer, action: \.selectCurrencyReducer) {
             SelectCurrencyReducer()
         }
-
     }
 }

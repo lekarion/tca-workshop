@@ -22,9 +22,9 @@ struct ContentView: View {
                             Text("Select...")
                         }
                         .disabled(true) // TODO: enable when corresponding functionality is implemented
-                    }
-                    .sheet(isPresented: $store.state.isCurrencySelectionPresented) {
-                        makeCurrencySelectionView()
+                        .sheet(isPresented: $store.state.isFromCurrencyPresented) {
+                            makeCurrencySelectionView()
+                        }
                     }
 
                     VStack(alignment: .leading, spacing: UIConstants.Spacing.standard) {
