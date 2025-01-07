@@ -38,6 +38,9 @@
         }
       }
     },
+    "Basic" : {
+
+    },
     "CAD.canadian.dollar.flag" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -139,6 +142,9 @@
           }
         }
       }
+    },
+    "Reset..." : {
+
     },
     "SEK.swedish.krona.flag" : {
       "extractionState" : "manual",

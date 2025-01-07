@@ -32,6 +32,7 @@ struct ContentReducer {
     enum Action: BindableAction {
         case binding(BindingAction<State>)
         case initialize
+        case reset
         // User actions
         case didRequestUpdateFromCurrency
         case didRequestUpdateCourse(Int)
@@ -40,6 +41,7 @@ struct ContentReducer {
         case didRequestRemoveCurrency(Int)
         // Handle changes
         case setCurrencyDescriptors([Currency: CurrencyDescriptor])
+        case updateCurrencyDescriptor(Currency, CurrencyDescriptor)
         case setInitialData(Currency, [Currency], [Currency: CurrencyRecord])
         case setFromCurrency(String)
         case setFromValue(Double)
@@ -91,12 +93,28 @@ struct ContentReducer {
                     await send(.setCurrencyDescriptors(descriptors))
                     await send(.setInitialData(fromCurrency, currencies, records))
                 }
+            case .reset:
+                return .run { send in
+                    let currenciesBase = try await currencyDataProvider.currenciesBase()
+                    let fromCurrency = currenciesBase.baseCode
+
+                    try? await contentDataProvider.pushFromCurrency(fromCurrency)
+                    try? await contentDataProvider.pushCurrencies([])
+                    try? await contentDataProvider.pushCurrencyRecords([:])
+
+                    await send(.setInitialData(fromCurrency, [], [:]))
+                    if let info = try? await currencyDataProvider.getCurrencyDescriptor(fromCurrency) {
+                        await send(.updateCurrencyDescriptor(fromCurrency, info))
+                    }
+                }
             case let .setInitialData(fromCurrency, currencies, currencyRecords):
                 state.fromCurrency = fromCurrency
                 state.currencies = OrderedSet(currencies)
                 state.currencyRecords = currencyRecords
             case let .setCurrencyDescriptors(value):
                 state.currencyDescriptors = value
+            case let .updateCurrencyDescriptor(currency, descriptor):
+                state.currencyDescriptors[currency] = descriptor
             case .didRequestUpdateFromCurrency:
                 state.isFromCurrencyPresented = true
             case let .didRequestUpdateCourse(idx):

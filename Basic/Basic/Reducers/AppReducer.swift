@@ -20,6 +20,7 @@ struct AppReducer {
     enum Action {
         case initialize
         case setInitialized(Bool)
+        case resetContent
         // Scopes
         case contentFeature(ContentReducer.Action)
     }
@@ -35,6 +36,8 @@ struct AppReducer {
                 }
             case let .setInitialized(value):
                 state.isInitialized = value
+            case .resetContent:
+                return .send(.contentFeature(.reset))
             case .contentFeature:
                 break
             }

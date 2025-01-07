@@ -13,8 +13,8 @@ struct BasicApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
-        WindowGroup {
-            ContentView(store: appDelegate.store)
+        Window("Basic", id: Constants.windowIdentifier) {
+            AppView(store: appDelegate.store)
                 .frame(
                     minWidth: UIConstants.Geometry.minContentSize.width,
                     minHeight: UIConstants.Geometry.minContentSize.height
@@ -22,5 +22,20 @@ struct BasicApp: App {
                 .padding()
         }
         .windowResizability(.contentSize)
+        .commands {
+            CommandGroup(after: CommandGroupPlacement.newItem) {
+                Button {
+                    appDelegate.store.send(.resetContent)
+                } label: {
+                    Text("Reset...")
+                }
+            }
+        }
+    }
+}
+
+private extension BasicApp {
+    enum Constants {
+        static let windowIdentifier = "com.basic.mainWindow"
     }
 }
