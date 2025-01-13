@@ -1,0 +1,41 @@
+{
+	"978":{
+		"sign":"EUR",
+		"identifier":"EUR.euro",
+		"exchange":{
+			"updateDate":758212611.65219,
+			"exchange": {
+				"units":1,
+				"currencyCode":"978",
+				"currencySign":"EUR",
+				"amount":43.5594
+			},
+		}
+	},
+	"124":{
+		"sign":"CAD",
+		"identifier":"CAD.canadian.dollar",
+		"exchange":{
+			"updateDate":758212614.013009,
+			"exchange":{
+				"units":1,
+				"currencyCode":"124",
+				"currencySign":"CAD",
+				"amount":29.3751
+			}
+		}
+	},
+	"840":{
+		"sign":"USD",
+		"identifier":"USD.us.dollar",
+		"exchange":{
+			"updateDate":758212610.036509,
+			"exchange":{
+				"units":1,
+				"currencyCode":"840",
+				"currencySign":"USD",
+				"amount":42.2825
+			}
+		}
+	}
+}
