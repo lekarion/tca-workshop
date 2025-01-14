@@ -20,7 +20,7 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:Basic.xcodeproj",
-        "identifier" : "8BC055B32D0764220001761E",
+        "identifier" : "009EB31EEBED37830213674D",
         "name" : "BasicTests"
       }
     },
@@ -29,7 +29,7 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:Basic.xcodeproj",
-        "identifier" : "8BC055BD2D0764220001761E",
+        "identifier" : "3FCEAE526AE62FA5FCF18FD3",
         "name" : "BasicUITests"
       }
     }

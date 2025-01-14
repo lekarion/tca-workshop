@@ -1,0 +1,108 @@
+#
+#   targets.yml
+#   Basic
+#
+
+name: Basic
+options:
+  bundleIdPrefix: com.olegyaros
+  settingPresets: none
+
+configs:
+  Debug: none
+  Release: none
+
+configFiles:
+  Debug: Configurations/Debug.xcconfig
+  Release: Configurations/Release.xcconfig
+
+# templates
+targetTemplates:
+  CommonAppTarget:
+    type: application
+    platform: macOS
+    productName: ${target_name}
+    configFiles:
+      Debug: Configurations/Product/Basic.xcconfig
+      Release: Configurations/Product/Basic.xcconfig
+    settings:
+      PRODUCT_NAME: ${target_name}
+    sources:
+      - "${target_name}"
+
+  CommonTargetTests:
+    templates: [CommonTargetTestsBase]
+    type: bundle.unit-test
+    platform: macOS
+    configFiles:
+      Debug: Configurations/UnitTest.xcconfig
+      Release: Configurations/UnitTest.xcconfig
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.olegyaros.${target_name}
+      PRODUCT_NAME: ${target_name}
+    sources:
+      - "${target_name}"
+
+  CommonTargetUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    configFiles:
+      Debug: Configurations/UITest.xcconfig
+      Release: Configurations/UITest.xcconfig
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.olegyaros.${target_name}
+      PRODUCT_NAME: ${target_name}
+    sources:
+      - "${target_name}"
+
+
+schemeTemplates:
+  CommonScheme:
+    build:
+      targets:
+        ${scheme_name}: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      testPlans:
+        - path: "${scheme_name}/${scheme_name}.xctestplan"
+          defaultPlan: true
+    profile:
+      config: Release
+    analyze:
+      config: Release
+    archive:
+      config: Release
+
+packages:
+  ComposableArchitecture:
+    url: https://github.com/pointfreeco/swift-composable-architecture
+    from: 1.17.0
+  Dependencies:
+    url: https://github.com/pointfreeco/swift-dependencies
+    from: 1.6.0
+
+# targets & schemes
+targets:
+  Basic: 
+    templates: [CommonAppTarget]
+    settings:
+      SWIFT_STRICT_CONCURRENCY: complete
+    dependencies:
+      - package: ComposableArchitecture
+      - package: Dependencies
+
+  BasicTests:
+    templates: [CommonTargetTests]
+    dependencies:
+      - target: Basic
+
+  BasicUITests:
+    templates: [CommonTargetUITests]
+    dependencies:
+      - target: Basic
+
+schemes:
+  Basic:
+    templates: [CommonScheme]

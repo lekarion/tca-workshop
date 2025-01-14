@@ -1,0 +1,32 @@
+//
+//  Basic.xcconfig
+//  Basic
+//
+//  Created by developer on 14.01.2025.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+PRODUCT_BUNDLE_IDENTIFIER = com.olegyaros.Basic
+PRODUCT_NAME = $(TARGET_NAME)
+
+CURRENT_PROJECT_VERSION = 1
+MARKETING_VERSION = 1.0
+
+COMBINE_HIDPI_IMAGES = YES
+SWIFT_EMIT_LOC_STRINGS = YES
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
+ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor
+
+CODE_SIGN_ENTITLEMENTS = Basic/Basic.entitlements
+
+CODE_SIGN_STYLE = Automatic
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks
+
+
+ENABLE_PREVIEWS = YES
+GENERATE_INFOPLIST_FILE = YES
+INFOPLIST_KEY_NSHumanReadableCopyright =
+
+DEVELOPMENT_ASSET_PATHS = Basic/PreviewContent/Resources Basic/PreviewContent/Sources

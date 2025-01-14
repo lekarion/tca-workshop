@@ -4,4 +4,10 @@
    <FileRef
       location = "group:Basic.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:project.yml">
+   </FileRef>
+   <FileRef
+      location = "group:targets.yml">
+   </FileRef>
 </Workspace>
